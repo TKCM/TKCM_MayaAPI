@@ -8,9 +8,9 @@ def maya_useNewAPI():
   pass
 
 kPluginNodeId = OM.MTypeId( 0x75243 )
-kPluginNodeName = 'SquashAndStretch_ramp'
+kPluginNodeName = 'SquashAndStretchRamp'
 
-class SquashAndStretch_ramp( OM.MPxNode ):
+class SquashAndStretchRamp( OM.MPxNode ):
 
     def __init__( self ):
         OM.MPxNode.__init__( self )
@@ -24,9 +24,10 @@ class SquashAndStretch_ramp( OM.MPxNode ):
         cacheOriEdgeLenHandle = block.outputArrayValue( self.cacheOriEdgeLen )
         outMeshHandle = block.outputValue( self.outputMesh )
 
-        # イテレータを取得 
+        # イテレータを取得
         origEdgeIter = OM.MItMeshEdge( origMesh )
         targetEdgeIter = OM.MItMeshEdge( targetMesh )
+        origFnMesh = OM.MFnMesh( origMesh )
         tarVerIter = OM.MItMeshVertex( targetMesh )
 
         # デフォームメッシュデータを準備
@@ -59,7 +60,9 @@ class SquashAndStretch_ramp( OM.MPxNode ):
 
             if val < 0.0:
                 curveAttribute = OM.MRampAttribute( self.thisMObject(), self.curveRamp )
-                val = curveAttribute.getValueAtPosition( val * -5) * -1
+                i = tarVerIter.index()
+                ratio = sVal - abs( origFnMesh.getPoint(i).y ) / sVal
+                val *= curveAttribute.getValueAtPosition( ratio )
             offset = tarVerIter.getNormal() * val
 
             resultMesh.setPoint( tarVerIter.index(), tarVerIter.position() + offset )
@@ -100,7 +103,7 @@ class SquashAndStretch_ramp( OM.MPxNode ):
         typedAttr.keyable = True
         cls.outputMesh = typedAttr.create('outputMesh', 'outMesh', OM.MFnData.kMesh)
         typedAttr.writable = False
-        cls.sVal = nAttr.create( 'sVal', 'sv', OM.MFnNumericData.kDouble )
+        cls.sVal = nAttr.create( 'sVal', 'sv', OM.MFnNumericData.kDouble, 1.0 )
         nAttr.writable = True
         cls.cacheOriEdgeLen = nAttr.create( 'cacheOriEdgeLen', 'rv', OM.MFnNumericData.kDouble )
         nAttr.array = True
@@ -124,7 +127,7 @@ class SquashAndStretch_ramp( OM.MPxNode ):
 def initializePlugin( obj ):
     plugin = OM.MFnPlugin( obj )
     try:
-        plugin.registerNode( kPluginNodeName, kPluginNodeId, SquashAndStretch_ramp.creator, SquashAndStretch_ramp.initialize, OM.MPxNode.kDependNode )
+        plugin.registerNode( kPluginNodeName, kPluginNodeId, SquashAndStretchRamp.creator, SquashAndStretchRamp.initialize, OM.MPxNode.kDependNode )
     except:
         sys.stderr.write( 'Failed to register node: ' + kPluginNodeName )
         raise
