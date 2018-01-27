@@ -55,7 +55,7 @@ class SquashAndStretch( OM.MPxNode ):
             for edge in edgePack:
               oVal += oEdgeLenArray[ edge ]
               tVal += tEdgeLenArray[ edge ]
-            val = 1.0 - tVal/oVal
+            val = 1.0 - ( tVal / oVal * sVal )
 
             offset = tarVerIter.getNormal() * val
 
@@ -86,7 +86,7 @@ class SquashAndStretch( OM.MPxNode ):
         typedAttr.keyable = True
         cls.outputMesh = typedAttr.create('outputMesh', 'outMesh', OM.MFnData.kMesh)
         typedAttr.writable = False
-        cls.sVal = nAttr.create( 'sVal', 'sv', OM.MFnNumericData.kDouble )
+        cls.sVal = nAttr.create( 'sVal', 'sv', OM.MFnNumericData.kDouble, 1.0 )
         nAttr.writable = True
         cls.cacheOriEdgeLen = nAttr.create( 'cacheOriEdgeLen', 'rv', OM.MFnNumericData.kDouble )
         nAttr.array = True
