@@ -1,4 +1,4 @@
-#include "collideDeform.h"
+ï»¿#include "collideDeform.h"
 
 #include <maya/MIOStream.h>
 #include <maya/MFnPlugin.h>
@@ -16,14 +16,14 @@
 
 #include <maya/MThreadUtils.h>
 
-// ƒm[ƒhID
+// ãƒãƒ¼ãƒ‰ID
 #define kPluginNodeId 0x75245
-// ƒm[ƒh–¼
+// ãƒãƒ¼ãƒ‰å
 #define kPluginNodeName "CollideDeform"
-// ƒNƒ‰ƒX–¼
+// ã‚¯ãƒ©ã‚¹å
 #define kPluginClassName CollideDeform
 
-// ƒƒ“ƒo•Ï”
+// ãƒ¡ãƒ³ãƒå¤‰æ•°
 MObject CollideDeform::origMesh;
 MObject CollideDeform::pos;
 MObject CollideDeform::collisionMesh;
@@ -32,10 +32,10 @@ MObject CollideDeform::ramp;
 MObject CollideDeform::swellLength;
 MObject CollideDeform::swellVal;
 
-// ƒRƒ“ƒXƒgƒ‰ƒNƒ^EƒfƒXƒgƒ‰ƒNƒ^
+// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ãƒ»ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 kPluginClassName::kPluginClassName() {}
 kPluginClassName::~kPluginClassName() {}
-// ƒm[ƒhƒNƒŠƒG[ƒ^[@(initializePlugin()‚Åg—p)
+// ãƒãƒ¼ãƒ‰ã‚¯ãƒªã‚¨ãƒ¼ã‚¿ãƒ¼ã€€(initializePlugin()ã§ä½¿ç”¨)
 void *kPluginClassName::creator(){	return new kPluginClassName(); }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,9 +43,10 @@ void *kPluginClassName::creator(){	return new kPluginClassName(); }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 MStatus kPluginClassName::compute( const MPlug &plug, MDataBlock &data ){
+	
 	MStatus stat;
 
-	// ƒJƒXƒ^ƒ€ƒAƒgƒŠƒrƒ…[ƒg‚Ìƒnƒ“ƒhƒ‹‚ğæ“¾
+	// ã‚«ã‚¹ã‚¿ãƒ ã‚¢ãƒˆãƒªãƒ“ãƒ¥ãƒ¼ãƒˆã®ãƒãƒ³ãƒ‰ãƒ«ã‚’å–å¾—
 	MObject origMeshObj = data.inputValue(origMesh).asMesh();
 	MObject collisionMeshObj = data.inputValue(collisionMesh).asMesh();
 	MDataHandle inputData = data.inputValue(pos);
@@ -62,12 +63,12 @@ MStatus kPluginClassName::compute( const MPlug &plug, MDataBlock &data ){
 		return stat;
 	}
 
-	// ƒfƒtƒH[ƒ€ƒƒbƒVƒ…‚ğ€”õ
+	// ãƒ‡ãƒ•ã‚©ãƒ¼ãƒ ãƒ¡ãƒƒã‚·ãƒ¥ã‚’æº–å‚™
 	MObject meshObject = MFnMeshData().create();
 	MFnMesh	resultMesh;
 	resultMesh.copy(origMeshObj, meshObject);
 
-	// ƒfƒtƒH[ƒ€ŒvZ‚ÌŒ‹‰Ê‚ÌŠi”[æ‚ğ€”õ iƒIƒŠƒWƒiƒ‹‚Ìƒ|ƒCƒ“ƒgˆÊ’u‚Ì”z—ñ‚ğƒRƒs[j
+	// ãƒ‡ãƒ•ã‚©ãƒ¼ãƒ è¨ˆç®—ã®çµæœã®æ ¼ç´å…ˆã‚’æº–å‚™ ï¼ˆã‚ªãƒªã‚¸ãƒŠãƒ«ã®ãƒã‚¤ãƒ³ãƒˆä½ç½®ã®é…åˆ—ã‚’ã‚³ãƒ”ãƒ¼ï¼‰
 	MFloatPointArray newPoints;
 	resultMesh.getPoints(newPoints);
 
@@ -105,10 +106,10 @@ MStatus kPluginClassName::compute( const MPlug &plug, MDataBlock &data ){
 		}
 	resultMesh.setPoints(newPoints);
 
-	// ƒƒbƒVƒ…‚ğo—Í
+	// ãƒ¡ãƒƒã‚·ãƒ¥ã‚’å‡ºåŠ›
 	outMeshHandle.setMObject(meshObject);
 
-	// I—¹
+	// çµ‚äº†
 	data.setClean(plug);
 	return MS::kSuccess;
 }
@@ -130,7 +131,7 @@ void kPluginClassName::postConstructor() {
 	elementPlug.child(2).setInt(2);
 }
 
-// ƒAƒgƒŠƒrƒ…[ƒgì¬@(initializePlugin()‚Åg—p)
+// ã‚¢ãƒˆãƒªãƒ“ãƒ¥ãƒ¼ãƒˆä½œæˆã€€(initializePlugin()ã§ä½¿ç”¨)
 MStatus kPluginClassName::initialize()
 {
 	MFnTypedAttribute gAttr;
